@@ -1,31 +1,62 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador Pedagógico de Traspaso de Celdas - IRREYES_HANDOVER_SIM</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IRREYES_MAPS</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Simulador Pedagógico de Traspaso de Celdas</h1>
-  <div id="map-container">
-    <canvas id="handoverCanvas"></canvas>
+  <div id="header"><h1>IRREYES_MAPS</h1></div>
+  <div id="map"></div>
+  <div id="panel">
+    <h2>Visibilidad</h2>
+    <fieldset>
+      <label><input type="checkbox" id="toggleStations" checked /> Mostrar estaciones</label>
+      <label><input type="checkbox" id="toggleLabels" checked /> Mostrar etiquetas</label>
+      <div class="row">
+        <label style="flex:1;"><input type="checkbox" id="toggleZTE" checked /> ZTE</label>
+        <label style="flex:1;"><input type="checkbox" id="toggleERI" checked /> Ericsson</label>
+      </div>
+      <div class="small">Colores: <span class="legend-dot" style="background:blue"></span>ZTE <span class="legend-dot" style="background:orange"></span>ERI <span class="legend-dot" style="background:gray"></span>OTRO</div>
+    </fieldset>
+    <h2>Parámetros</h2>
+    <fieldset>
+      <label for="beamLength">Longitud del haz (m) — ±30°</label>
+      <input type="number" id="beamLength" min="10" max="3000" step="10" value="150" />
+      <label for="labelSize">Tamaño etiquetas (px)</label>
+      <input type="number" id="labelSize" min="8" max="72" step="1" value="24" />
+      <button class="btn" id="applyStyle">Aplicar estilo</button>
+    </fieldset>
+    <h2>Sites (selección individual)</h2>
+    <fieldset>
+      <div id="sitesList"></div>
+      <button class="btn" id="showAllSites">Marcar todo</button>
+      <button class="btn" id="hideAllSites">Desmarcar todo</button>
+    </fieldset>
+    <h2>Importar estaciones</h2>
+    <fieldset>
+      <div class="small">CSV/JSON con columnas: site_name, sector_fisico_sector, latitude, longitude, azimuth, VENDOR</div>
+      <input type="file" id="importFile" accept=".csv,.json" />
+      <button class="btn" id="clearAll">Eliminar todas las estaciones (mantener cliente)</button>
+      <div class="small">⚠️ Rendimiento: hasta ~2.000 sectores va fluido. Con más, considera agrupar o reducir zoom.</div>
+    </fieldset>
+    <h2>Clientes</h2>
+    <fieldset>
+      <div class="small">Añade clientes por coordenadas: <b>lat,lon[,label]</b>. Ej: <i>41.6422,-0.8736,Cliente A</i><br/>Si introduces solo texto, se intentará geocodificar (requiere internet).</div>
+      <input type="text" id="clientInput" placeholder="41.6422,-0.8736,Cliente A" />
+      <button class="btn" id="addClient">Añadir cliente</button>
+      <label style="margin-top:6px;"><input type="checkbox" id="toggleClients" checked /> Mostrar clientes</label>
+      <div id="clientsList" style="margin-top:6px;"></div>
+    </fieldset>
+    <h2>Utilidad</h2>
+    <fieldset>
+      <button class="btn" id="fitAll">Encajar todo</button>
+      <button class="btn" id="reset">Reset</button>
+    </fieldset>
   </div>
-
-  <div id="formula">
-    <h3>Fórmula del evento A3</h3>
-    <textarea rows="4" cols="90">
-RSRP_target - RSRP_source >
-ReportConfigEUtraBestCell.a3offset/10 +
-EUtranFreqRelation.a3RsrpFreqOffsetAdjustment/10 +
-EUtranFreqRelation.eUtranFreqToQciProfileRelation<qci>.a3RsrpFreqQciOffsetAdjustment/10 +
-ReportConfigEUtraBestCell.hysteresisA3/10 -
-EUtranCellRelation.cellIndividualOffsetEUtran
-    </textarea>
-  </div>
-
-  <div id="table-container"></div>
-
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="script.js"></script>
 </body>
 </html>
