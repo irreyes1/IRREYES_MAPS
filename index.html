@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador Pedagógico de Traspaso de Celdas - IRREYES_HANDOVER_SIM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Simulador Pedagógico de Traspaso de Celdas</h1>
+  <div id="map-container">
+    <canvas id="handoverCanvas"></canvas>
+  </div>
+
+  <div id="formula">
+    <h3>Fórmula del evento A3</h3>
+    <textarea rows="4" cols="90">
+RSRP_target - RSRP_source >
+ReportConfigEUtraBestCell.a3offset/10 +
+EUtranFreqRelation.a3RsrpFreqOffsetAdjustment/10 +
+EUtranFreqRelation.eUtranFreqToQciProfileRelation<qci>.a3RsrpFreqQciOffsetAdjustment/10 +
+ReportConfigEUtraBestCell.hysteresisA3/10 -
+EUtranCellRelation.cellIndividualOffsetEUtran
+    </textarea>
+  </div>
+
+  <div id="table-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
