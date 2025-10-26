@@ -112,6 +112,79 @@ let measurementPoints = [];
 let measurementMarkers = [];
 let measurementLine = null;
 
+function updateSummary() {
+  const statSites = $("statSites");
+  const statSectors = $("statSectors");
+  const statClients = $("statClients");
+  const statVendors = $("statVendors");
+  const lastUpdatedEl = $("lastUpdated");
+
+  if (!statSites || !statSectors || !statClients || !statVendors) {
+    return;
+  }
+
+  const showZTE = $("toggleZTE") ? $("toggleZTE").checked : true;
+  const showERI = $("toggleERI") ? $("toggleERI").checked : true;
+
+  let totalSites = 0;
+  let visibleSites = 0;
+  let totalSectors = 0;
+  const vendorTotals = new Map();
+
+  siteGroups.forEach((info) => {
+    totalSites += 1;
+    totalSectors += info.sectors.length;
+    const vendorKey = info.vendor || "OTRO";
+    vendorTotals.set(vendorKey, (vendorTotals.get(vendorKey) || 0) + 1);
+
+    const vendorVisible =
+      (vendorKey === "ZTE" && showZTE) ||
+      ((vendorKey === "ERI" || vendorKey === "ERICSSON") && showERI) ||
+      (vendorKey !== "ZTE" && vendorKey !== "ERI" && vendorKey !== "ERICSSON");
+
+    if (info.visible && vendorVisible) {
+      visibleSites += 1;
+    }
+  });
+
+  statSites.textContent = `${visibleSites}/${totalSites}`;
+  statSites.title = "Sites visibles con filtros / Sites totales";
+
+  statSectors.textContent = `${totalSectors}`;
+  statSectors.title = "Suma de sectores disponibles";
+
+  const homeToggle = $("toggleClientHome");
+  const includeReference = homeToggle ? homeToggle.checked : true;
+  statClients.textContent = `${clients.length}${includeReference ? " + ref" : ""}`;
+  statClients.title = includeReference
+    ? "Clientes añadidos + cliente de referencia visible"
+    : "Clientes añadidos (cliente de referencia oculto)";
+
+  statVendors.textContent = vendorTotals.size
+    ? Array.from(vendorTotals.entries())
+        .map(([vendor, count]) => `${vendor}: ${count}`)
+        .join(" • ")
+    : "Sin vendors cargados.";
+
+  if (lastUpdatedEl) {
+    const now = new Date();
+    lastUpdatedEl.textContent = now.toLocaleString("es-ES", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+    if (typeof lastUpdatedEl.setAttribute === "function") {
+      lastUpdatedEl.setAttribute("datetime", now.toISOString());
+    }
+    if (lastUpdatedEl.parentElement) {
+      lastUpdatedEl.parentElement.title = now.toLocaleString("es-ES");
+    }
+  }
+}
+
 function renderSite(site, sector, lat, lon, az, vendor) {
   let info = siteGroups.get(site);
 
@@ -220,10 +293,11 @@ function applyVisibilityFilters() {
   const showERI = $("toggleERI").checked;
 
   siteGroups.forEach((info, site) => {
+    const isEricsson = info.vendor === "ERI" || info.vendor === "ERICSSON";
     const vendorVisible =
       (info.vendor === "ZTE" && showZTE) ||
-      (info.vendor === "ERI" && showERI) ||
-      (info.vendor !== "ZTE" && info.vendor !== "ERI");
+      (isEricsson && showERI) ||
+      (info.vendor !== "ZTE" && !isEricsson);
 
     const baseVisible = vendorVisible && info.visible;
 
@@ -262,6 +336,8 @@ function applyVisibilityFilters() {
     map.removeLayer(clientMarker);
     map.removeLayer(clientLabelMarker);
   }
+
+  updateSummary();
 }
 
 function rebuildAll(stationsArray) {
@@ -312,6 +388,7 @@ function addClientPoint(lat, lon, label) {
       clientRoot.removeLayer(clients[index].labelMarker);
       clients.splice(index, 1);
       row.remove();
+      updateSummary();
     }
   });
 

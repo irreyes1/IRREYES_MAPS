@@ -4,15 +4,44 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IRREYES_MAPS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="header">
-    <h1><span>Irreyes</span> Maps</h1>
+    <div class="header-left">
+      <h1><span>Irreyes</span> Maps</h1>
+      <p class="tagline">Cobertura, clientes y medición en un único panel dinámico.</p>
+    </div>
+    <div class="header-badges">
+      <span class="badge glow">Toolkit 2024</span>
+      <span class="badge timing">Actualizado <time id="lastUpdated">—</time></span>
+    </div>
   </div>
   <div id="map"></div>
   <div id="panel">
+    <div id="statsBar">
+      <div class="stat-card">
+        <span class="stat-label">Sites visibles</span>
+        <strong id="statSites">0/0</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Sectores cargados</span>
+        <strong id="statSectors">0</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Clientes guardados</span>
+        <strong id="statClients">0</strong>
+      </div>
+    </div>
+    <p class="stat-legend" id="statVendors">Sin vendors cargados.</p>
+
     <h2>Estilo del mapa</h2>
     <fieldset>
       <label for="beamLength">Longitud del haz (m)</label>
