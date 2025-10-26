@@ -8,13 +8,81 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="header"><h1>IRREYES_MAPS</h1></div>
+  <div id="header">
+    <h1><span>Irreyes</span> Maps</h1>
+  </div>
   <div id="map"></div>
   <div id="panel">
-    <!-- El panel completo lo dejas igual -->
+    <h2>Estilo del mapa</h2>
+    <fieldset>
+      <label for="beamLength">Longitud del haz (m)</label>
+      <input type="number" id="beamLength" value="150" min="10" step="10" />
+      <label for="labelSize">Tamaño de etiquetas (px)</label>
+      <input type="number" id="labelSize" value="24" min="8" max="64" />
+      <button class="btn primary" id="applyStyle">Aplicar cambios</button>
+    </fieldset>
+
+    <h2>Visibilidad del mapa</h2>
+    <fieldset>
+      <label><input type="checkbox" id="toggleCoverage" checked /> Cobertura de sectores</label>
+      <label><input type="checkbox" id="toggleSiteMarkers" checked /> Puntos de site</label>
+      <label><input type="checkbox" id="toggleLabels" checked /> Etiquetas de site</label>
+      <label><input type="checkbox" id="toggleClients" checked /> Clientes añadidos</label>
+      <label><input type="checkbox" id="toggleClientHome" checked /> Cliente de referencia</label>
+      <div class="row compact">
+        <label><input type="checkbox" id="toggleZTE" checked /> Mostrar ZTE</label>
+        <label><input type="checkbox" id="toggleERI" checked /> Mostrar ERICSSON</label>
+      </div>
+    </fieldset>
+
+    <h2>Gestión de sites</h2>
+    <fieldset>
+      <div class="row">
+        <button class="btn" id="showAllSites">Marcar todos</button>
+        <button class="btn" id="hideAllSites">Ocultar todos</button>
+      </div>
+      <div class="row">
+        <input type="text" id="siteSearchInput" placeholder="Buscar site (ej: ARA0012)" />
+        <button class="btn" id="siteSearch">Buscar</button>
+      </div>
+      <p class="hint" id="siteSearchHint">Escribe un código de site para centrar el mapa.</p>
+      <div id="sitesList"></div>
+      <div class="row">
+        <button class="btn" id="fitAll">Ver todo</button>
+        <button class="btn" id="reset">Restaurar inicial</button>
+      </div>
+    </fieldset>
+
+    <h2>Importación / exportación</h2>
+    <fieldset>
+      <input type="file" id="importFile" accept=".csv,.json" />
+      <div class="row">
+        <button class="btn" id="downloadTemplate">Descargar plantilla CSV</button>
+        <button class="btn" id="exportStations">Exportar actuales</button>
+      </div>
+      <button class="btn danger" id="clearAll">Vaciar estaciones</button>
+    </fieldset>
+
+    <h2>Clientes</h2>
+    <fieldset>
+      <label for="clientInput">Latitud, longitud o dirección</label>
+      <input type="text" id="clientInput" placeholder="41.64, -0.87, Cliente" />
+      <button class="btn primary" id="addClient">Añadir cliente</button>
+      <div id="clientsList"></div>
+    </fieldset>
+
+    <h2>Medición rápida</h2>
+    <fieldset>
+      <p class="hint">Activa la herramienta y haz clic en dos puntos para medir la distancia.</p>
+      <div class="row">
+        <button class="btn" id="startMeasure">Iniciar medición</button>
+        <button class="btn" id="clearMeasure">Limpiar</button>
+      </div>
+      <p class="hint" id="measureInfo">Sin mediciones activas.</p>
+    </fieldset>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="scripts.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
